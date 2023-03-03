@@ -1,30 +1,21 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import axios from "axios";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./page/home/home.jsx";
 
 function App() {
-    const [hello, setHello] = useState("no connect");
-
-    const connect = () => {
-        axios
-            .get("/api", {})
-            .then((res) => {
-                console.log(res);
-                setHello(res.data);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-    };
+    const connect = () => {};
 
     useEffect(() => {
         connect();
     }, []);
 
     return (
-        <div className="App">
-            <h1>{hello}</h1>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
