@@ -1,9 +1,13 @@
 import style from "./home.module.css";
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 function Home() {
     const memberList = document.getElementsByClassName(style.memberList);
     const tableHead = document.getElementsByClassName(style.tableHead);
+
+    const navigate = useNavigate();
 
     const getMember = () => {
         axios
@@ -52,6 +56,9 @@ function Home() {
                     const memberInfoButton = document.createElement("button");
                     memberInfoButton.setAttribute("class", style.infoButton);
                     memberInfoButton.innerText = "보기";
+                    memberInfoButton.onclick = async () => {
+                        navigate(`/memberInfo/${res.data[i].id}`);
+                    };
                     memberTableRow.appendChild(memberInfoButton);
 
                     tableHead[0].appendChild(memberTableRow);
