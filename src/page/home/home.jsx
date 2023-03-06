@@ -90,6 +90,13 @@ function Home() {
                     </tr>
                 </thead>
             </table>
+            <button
+                onClick={() => {
+                    navigate(`/signUp`);
+                }}
+            >
+                회원가입
+            </button>
         </div>
     );
 }
