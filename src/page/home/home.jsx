@@ -97,6 +97,15 @@ function Home() {
             >
                 회원가입
             </button>
+            <br />
+            <br />
+            <button
+                onClick={() => {
+                    navigate(`/login`);
+                }}
+            >
+                로그인
+            </button>
         </div>
     );
 }

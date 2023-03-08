@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./page/home/home.jsx";
 import MemberInfo from "./page/memberInfo/memberInfo.jsx";
 import SignUp from "./page/signup/signup.jsx";
+import Login from "./page/login/login.jsx";
 
 function App() {
     const connect = () => {};
@@ -22,6 +23,9 @@ function App() {
             </Routes>
             <Routes>
                 <Route path="/signUp" element={<SignUp />} />
+            </Routes>
+            <Routes>
+                <Route path="/login" element={<Login />} />
             </Routes>
         </BrowserRouter>
     );
