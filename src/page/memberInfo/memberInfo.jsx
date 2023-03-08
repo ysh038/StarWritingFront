@@ -20,14 +20,14 @@ function MemberInfo() {
                 ) {
                     profileImg[0].setAttribute(
                         "src",
-                        "http://127.0.0.1:8887/basicProfile.png"
+                        "http://127.0.0.1:8887/img/profileImg/basicProfile.png"
                     );
                 } else {
                     profileImg[0].setAttribute(
                         "src",
-                        "http://127.0.0.1:8887/" +
+                        "http://127.0.0.1:8887/members/" +
                             res.data.memberId +
-                            "/" +
+                            "/profileImg/" +
                             res.data.profileImage.storeFileName
                     );
                 }
