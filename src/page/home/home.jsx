@@ -106,6 +106,15 @@ function Home() {
             >
                 로그인
             </button>
+            <br />
+            <br />
+            <button
+                onClick={() => {
+                    navigate(`/post`);
+                }}
+            >
+                글 작성
+            </button>
         </div>
     );
 }

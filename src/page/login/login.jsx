@@ -19,7 +19,7 @@ function Login() {
                             console.log(res);
                             let jwtToken = res.headers.get("Authorization");
                             console.log(jwtToken);
-                            localStorage.setItem("token", jwtToken);
+                            localStorage.setItem("Authorization", jwtToken);
                         })
                         .catch((e) => {
                             console.error(e);

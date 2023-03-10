@@ -5,6 +5,8 @@ import Home from "./page/home/home.jsx";
 import MemberInfo from "./page/memberInfo/memberInfo.jsx";
 import SignUp from "./page/signup/signup.jsx";
 import Login from "./page/login/login.jsx";
+import Post from "./page/post/post.jsx";
+import PostInfo from "./page/postInfo/postInfo.jsx";
 
 function App() {
     const connect = () => {};
@@ -26,6 +28,15 @@ function App() {
             </Routes>
             <Routes>
                 <Route path="/login" element={<Login />} />
+            </Routes>
+            <Routes>
+                <Route path="/post" element={<Post />} />
+            </Routes>
+            <Routes>
+                <Route path="/memberInfo/:id" element={<MemberInfo />} />
+            </Routes>
+            <Routes>
+                <Route path="/postInfo/:id" element={<PostInfo />} />
             </Routes>
         </BrowserRouter>
     );
