@@ -7,7 +7,7 @@ function MemberInfo() {
     const { id } = useParams();
     const [memberInfo, setMemberInfo] = useState({});
 
-    const profileImg = document.getElementsByClassName(style.img);
+    const profileImg = document.getElementsByClassName(style.profileImg);
 
     const getMemberInfo = () => {
         axios
@@ -50,7 +50,7 @@ function MemberInfo() {
             <p>nickname is {memberInfo.nickname}</p>
             <p>tier is {memberInfo.tier}</p>
             <p>createDate is {memberInfo.createDate}</p>
-            <img className={style.img} alt="" />
+            <img className={style.profileImg} alt="" />
         </div>
     );
 }

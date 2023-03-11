@@ -1,10 +1,16 @@
 .homeWrapper {
 }
 
-.table {
+.memberTable {
 }
 
-.tableHead {
+.memberTableHead {
+}
+
+.postTable {
+}
+
+.postTableHead {
 }
 
 .tr {
@@ -14,6 +20,9 @@
 }
 
 .memberTableRow {
+}
+
+.postTableRow {
 }
 
 .infoButton {

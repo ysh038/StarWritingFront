@@ -9,19 +9,10 @@ import Post from "./page/post/post.jsx";
 import PostInfo from "./page/postInfo/postInfo.jsx";
 
 function App() {
-    const connect = () => {};
-
-    useEffect(() => {
-        connect();
-    }, []);
-
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-            </Routes>
-            <Routes>
-                <Route path="/memberInfo/:id" element={<MemberInfo />} />
             </Routes>
             <Routes>
                 <Route path="/signUp" element={<SignUp />} />
