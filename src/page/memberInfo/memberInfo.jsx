@@ -7,34 +7,35 @@ function MemberInfo() {
     const { id } = useParams();
     const [memberInfo, setMemberInfo] = useState({});
 
-    const profileImg = document.getElementsByClassName(style.img);
+    // const profileImg = document.getElementsByClassName(style.img);
+    const pfImg = document.getElementsByClassName(style.pfImg);
 
     const getMemberInfo = () => {
         axios
             .get(`/api/members/${id}`)
             .then((res) => {
                 setMemberInfo(res.data);
-                if (
-                    res.data.profileImage.originalFileName ===
-                    "basicProfile.png"
-                ) {
-                    profileImg[0].setAttribute(
-                        "src",
-                        "http://127.0.0.1:8887/basicProfile.png"
-                    );
-                } else {
-                    profileImg[0].setAttribute(
-                        "src",
-                        "http://127.0.0.1:8887/" +
-                            res.data.memberId +
-                            "/" +
-                            res.data.profileImage.storeFileName
-                    );
-                }
             })
             .catch((e) => {
                 console.error(e);
             });
+        
+        const config = { responseType: 'blob' };
+        
+        axios
+            .get(`/api/members/${id}/profile`, config)
+            .then((res) => {
+                console.log(typeof (res.data));
+                console.dir(res.data);
+                
+                let blob = new Blob([new ArrayBuffer(res.data)]);
+                const url = window.URL.createObjectURL(blob);
+                pfImg[0].setAttribute("src", url);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((e) => {
+                console.error(e);
+            })
     };
 
     useEffect(() => {
@@ -50,7 +51,8 @@ function MemberInfo() {
             <p>nickname is {memberInfo.nickname}</p>
             <p>tier is {memberInfo.tier}</p>
             <p>createDate is {memberInfo.createDate}</p>
-            <img className={style.img} alt="" />
+            {/* <img className={style.img} alt="" /> */}
+            <img className={style.pfImg} alt="" />
         </div>
     );
 }
