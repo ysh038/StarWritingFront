@@ -4,15 +4,8 @@ import axios from "axios";
 function Post() {
     async function checkToken() {
         console.log("submit 이벤트 발생");
-        // var frm = new FormData();
-        // var file = document.getElementById("file").files[0];
-        // frm.append("postImage", file);
-        // frm.append("title", event.target.title.value);
-        // frm.append("member", event.target.member.value);
-        // frm.append("mainText", event.target.mainText.value);
 
         const token = localStorage.getItem("Authorization");
-        console.log(token);
         await axios
             .post(
                 "/api/authorization",
