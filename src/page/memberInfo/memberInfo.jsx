@@ -6,6 +6,7 @@ import style from "./memberInfo.module.css";
 function MemberInfo() {
     const { id } = useParams();
     const [memberInfo, setMemberInfo] = useState({});
+    const [imgData, setImgData] = useState();
 
     // const profileImg = document.getElementsByClassName(style.img);
     const pfImg = document.getElementsByClassName(style.pfImg);
@@ -20,18 +21,19 @@ function MemberInfo() {
                 console.error(e);
             });
         
-        const config = { responseType: 'blob' };
+        const config = {
+            responseType: 'blob',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
         
         axios
             .get(`/api/members/${id}/profile`, config)
             .then((res) => {
                 console.log(typeof (res.data));
                 console.dir(res.data);
-                
-                let blob = new Blob([new ArrayBuffer(res.data)]);
-                const url = window.URL.createObjectURL(blob);
-                pfImg[0].setAttribute("src", url);
-                window.URL.revokeObjectURL(url);
+                setImgData(URL.createObjectURL(res.data));
             })
             .catch((e) => {
                 console.error(e);
@@ -52,7 +54,7 @@ function MemberInfo() {
             <p>tier is {memberInfo.tier}</p>
             <p>createDate is {memberInfo.createDate}</p>
             {/* <img className={style.img} alt="" /> */}
-            <img className={style.pfImg} alt="" />
+            <img className={style.pfImg} alt="" src={imgData} />
         </div>
     );
 }
