@@ -26,7 +26,7 @@ function MemberInfo() {
         };
 
         axios
-            .get(`/api/members/${id}/profile`, config)
+            .get(`/api/members/${id}/image`, config)
             .then((res) => {
                 console.log(typeof res.data);
                 console.dir(res.data);

@@ -6,7 +6,7 @@ import axios from "axios";
 function PostInfo() {
     const { id } = useParams();
     const [postInfo, setPostInfo] = useState({});
-    const [memberInfo, setMemberId] = useState({});
+    const [memberInfo, setMember] = useState({});
     const [imgData, setImgData] = useState();
 
     const postImg = document.getElementsByClassName(style.postImg);
@@ -40,28 +40,9 @@ function PostInfo() {
         axios
             .get(`/api/posts/${id}`)
             .then((res) => {
+                console.log(res.data);
                 setPostInfo(res.data);
-                setMemberId(res.data.memberId);
-                // if (
-                //     res.data.postImage.originalFileName.split("_", 2)[1] ===
-                //     "default"
-                // ) {
-                //     postImg[0].setAttribute(
-                //         "src",
-                //         "http://127.0.0.1:8887/img/postImg/" +
-                //             res.data.postImage.storeFileName
-                //     );
-                // } else {
-                //     postImg[0].setAttribute(
-                //         "src",
-                //         "http://127.0.0.1:8887/members/" +
-                //             res.data.memberId.memberId +
-                //             "/posts/" +
-                //             res.data.title +
-                //             "/" +
-                //             res.data.postImage.storeFileName
-                //     );
-                // }
+                setMember(res.data.member);
             })
             .catch((e) => {
                 console.error(e);
@@ -75,7 +56,7 @@ function PostInfo() {
         };
 
         axios
-            .get(`/api/posts/${id}`, config)
+            .get(`/api/posts/${id}/image`, config)
             .then((res) => {
                 console.log(res.data);
                 setImgData(URL.createObjectURL(res.data));

@@ -76,7 +76,7 @@ function Home() {
         axios
             .get("/api/posts")
             .then((res) => {
-                console.log(res.data);
+                console.log("post", res.data);
                 for (let i = 0; res.data[i] !== undefined; i++) {
                     const postTableRow = document.createElement("tr");
                     postTableRow.setAttribute("class", style.postTableRow);
@@ -88,7 +88,7 @@ function Home() {
 
                     const memberId = document.createElement("th");
                     memberId.setAttribute("class", style.th);
-                    memberId.innerText = res.data[i].memberId.memberId;
+                    memberId.innerText = res.data[i].member.memberId;
                     postTableRow.appendChild(memberId);
 
                     const title = document.createElement("th");
