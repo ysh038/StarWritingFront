@@ -85,7 +85,8 @@ function PostInfo() {
             <p>shared number is {postInfo.shared_num}</p>
             <p>view is {postInfo.view}</p>
             <img className={style.postImg} src={imgData} alt="" />
-
+            <p>================================</p>
+            <h2>댓글 작성</h2>
             <div className={style.comment}>
                 <form
                     className={style.commentForm}
