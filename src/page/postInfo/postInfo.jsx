@@ -7,12 +7,11 @@ function PostInfo() {
     const { id } = useParams();
     const [postInfo, setPostInfo] = useState({});
     const [memberInfo, setMemberId] = useState({});
+    const [imgData, setImgData] = useState();
 
     const postImg = document.getElementsByClassName(style.postImg);
 
     async function checkToken() {
-        console.log("submit 이벤트 발생");
-
         const token = localStorage.getItem("Authorization");
         await axios
             .post(
@@ -28,8 +27,7 @@ function PostInfo() {
                     },
                 }
             )
-            .then((res) => {
-                console.log(res);
+            .then(() => {
                 console.log("사용자 인증 완료");
                 document.getElementsByClassName(style.commentForm)[0].submit();
             })
@@ -44,27 +42,43 @@ function PostInfo() {
             .then((res) => {
                 setPostInfo(res.data);
                 setMemberId(res.data.memberId);
+                // if (
+                //     res.data.postImage.originalFileName.split("_", 2)[1] ===
+                //     "default"
+                // ) {
+                //     postImg[0].setAttribute(
+                //         "src",
+                //         "http://127.0.0.1:8887/img/postImg/" +
+                //             res.data.postImage.storeFileName
+                //     );
+                // } else {
+                //     postImg[0].setAttribute(
+                //         "src",
+                //         "http://127.0.0.1:8887/members/" +
+                //             res.data.memberId.memberId +
+                //             "/posts/" +
+                //             res.data.title +
+                //             "/" +
+                //             res.data.postImage.storeFileName
+                //     );
+                // }
+            })
+            .catch((e) => {
+                console.error(e);
+            });
+
+        const config = {
+            responseType: "blob",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            },
+        };
+
+        axios
+            .get(`/api/posts/${id}`, config)
+            .then((res) => {
                 console.log(res.data);
-                if (
-                    res.data.postImage.originalFileName.split("_", 2)[1] ===
-                    "default"
-                ) {
-                    postImg[0].setAttribute(
-                        "src",
-                        "http://127.0.0.1:8887/img/postImg/" +
-                            res.data.postImage.storeFileName
-                    );
-                } else {
-                    postImg[0].setAttribute(
-                        "src",
-                        "http://127.0.0.1:8887/members/" +
-                            res.data.memberId.memberId +
-                            "/posts/" +
-                            res.data.title +
-                            "/" +
-                            res.data.postImage.storeFileName
-                    );
-                }
+                setImgData(URL.createObjectURL(res.data));
             })
             .catch((e) => {
                 console.error(e);
@@ -89,7 +103,7 @@ function PostInfo() {
             <p>posting Date is {postInfo.posting_date}</p>
             <p>shared number is {postInfo.shared_num}</p>
             <p>view is {postInfo.view}</p>
-            <img className={style.postImg} alt="" />
+            <img className={style.postImg} src={imgData} alt="" />
 
             <div className={style.comment}>
                 <form
