@@ -8,10 +8,12 @@ function PostInfo() {
     const [postInfo, setPostInfo] = useState({});
     const [memberInfo, setMember] = useState({});
     const [imgData, setImgData] = useState();
+    const [memberId, setMemberId] = useState("");
 
+    const token = localStorage.getItem("Authorization");
     const postImg = document.getElementsByClassName(style.postImg);
 
-    async function checkToken() {
+    async function submitComment() {
         const token = localStorage.getItem("Authorization");
         await axios
             .post(
@@ -28,11 +30,39 @@ function PostInfo() {
                 }
             )
             .then(() => {
-                console.log("사용자 인증 완료");
                 document.getElementsByClassName(style.commentForm)[0].submit();
             })
             .catch((e) => {
                 console.error(e);
+            });
+    }
+
+    async function checkToken() {
+        await axios
+            .post(
+                "/api/authorization",
+                {
+                    dummy: "dummy",
+                    // post요청시 body가 없으니까 오류가 떴음. 아무 더미 데이터 전송
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                        // encType: "multipart/form-data", // 파일을 넣을거면 필수
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res);
+                setMemberId(res.data);
+            })
+            .catch((e) => {
+                console.error(e);
+                console.error(e.response.data);
+                if (e.response.data === "토큰이 유효하지 않습니다") {
+                    localStorage.clear();
+                }
             });
     }
 
@@ -73,11 +103,13 @@ function PostInfo() {
 
     useEffect(() => {
         getPostInfo();
+        checkToken();
     }, []);
 
     return (
         <div className={style.postInfoWrapper}>
             <h1>Here is PostInfo Page.</h1>
+            <h3>현재 로그인 되어있는 유저 : {memberId}</h3>
             <p>id is {postInfo.id}</p>
             <p>memberId is {memberInfo.memberId}</p>
             <p>title is {postInfo.title}</p>
@@ -112,6 +144,8 @@ function PostInfo() {
                         name="member"
                         placeholder="ID를 입력하세요"
                         width="200px"
+                        value={memberId}
+                        readOnly
                     />
                     <br />
                     <br />
@@ -126,7 +160,7 @@ function PostInfo() {
                     <br />
                     <br />
                 </form>
-                <button onClick={checkToken}>제출</button>
+                <button onClick={submitComment}>제출</button>
             </div>
         </div>
     );

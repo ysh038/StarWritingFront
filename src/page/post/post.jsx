@@ -1,11 +1,40 @@
 import style from "./post.module.css";
 import axios from "axios";
+import { useState, useEffect } from "react";
 
 function Post() {
-    async function checkToken() {
-        console.log("submit 이벤트 발생");
+    const [memberId, setMemberId] = useState("");
+    const token = localStorage.getItem("Authorization");
 
-        const token = localStorage.getItem("Authorization");
+    async function submitPost() {
+        await axios
+            .post(
+                "/api/authorization",
+                {
+                    dummy: "dummy",
+                    // post요청시 body가 없으니까 오류가 떴음. 아무 더미 데이터 전송
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                        // encType: "multipart/form-data", // 파일을 넣을거면 필수
+                    },
+                }
+            )
+            .then((res) => {
+                document.getElementsByClassName(style.postForm)[0].submit();
+            })
+            .catch((e) => {
+                console.error(e);
+                console.error(e.response.data);
+                if (e.response.data === "토큰이 유효하지 않습니다") {
+                    localStorage.clear();
+                }
+            });
+    }
+
+    async function checkToken() {
         await axios
             .post(
                 "/api/authorization",
@@ -23,10 +52,14 @@ function Post() {
             )
             .then((res) => {
                 console.log(res);
-                document.getElementsByClassName(style.postForm)[0].submit();
+                setMemberId(res.data);
             })
             .catch((e) => {
                 console.error(e);
+                console.error(e.response.data);
+                if (e.response.data === "토큰이 유효하지 않습니다") {
+                    localStorage.clear();
+                }
             });
     }
 
@@ -34,6 +67,10 @@ function Post() {
         e.preventDefault();
         console.log("preventDefault 작동");
     }
+
+    useEffect(() => {
+        checkToken();
+    }, []);
 
     return (
         <div className={style.postWrapper}>
@@ -61,6 +98,8 @@ function Post() {
                     id="member"
                     name="member"
                     placeholder="ID를 입력하세요"
+                    value={memberId}
+                    readOnly
                     width="200px"
                 />
                 <br />
@@ -79,7 +118,7 @@ function Post() {
                 <br />
                 <br />
             </form>
-            <button onClick={checkToken}>제출</button>
+            <button onClick={submitPost}>제출</button>
         </div>
     );
 }

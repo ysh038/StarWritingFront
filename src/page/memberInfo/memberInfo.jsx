@@ -6,7 +6,10 @@ import style from "./memberInfo.module.css";
 function MemberInfo() {
     const { id } = useParams();
     const [memberInfo, setMemberInfo] = useState({});
+    const [memberId, setMemberId] = useState("");
     const [imgData, setImgData] = useState();
+
+    const token = localStorage.getItem("Authorization");
 
     const getMemberInfo = () => {
         axios
@@ -36,14 +39,44 @@ function MemberInfo() {
                 console.error(e);
             });
     };
+    async function checkToken() {
+        await axios
+            .post(
+                "/api/authorization",
+                {
+                    dummy: "dummy",
+                    // post요청시 body가 없으니까 오류가 떴음. 아무 더미 데이터 전송
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                        // encType: "multipart/form-data", // 파일을 넣을거면 필수
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res);
+                setMemberId(res.data);
+            })
+            .catch((e) => {
+                console.error(e);
+                console.error(e.response.data);
+                if (e.response.data === "토큰이 유효하지 않습니다") {
+                    localStorage.clear();
+                }
+            });
+    }
 
     useEffect(() => {
         getMemberInfo();
+        checkToken();
     }, []);
 
     return (
         <div>
             <h1>Here is MemberInfo Page.</h1>
+            <h3>현재 로그인 되어있는 유저 : {memberId}</h3>
             <p>id is {memberInfo.id}</p>
             <p>memberId is {memberInfo.memberId}</p>
             <p>name is {memberInfo.name}</p>

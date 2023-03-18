@@ -1,9 +1,12 @@
 import style from "./home.module.css";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
+    const [memberId, setMemberId] = useState("");
+    const token = localStorage.getItem("Authorization");
+
     const postTableHead = document.getElementsByClassName(style.postTableHead);
 
     const memberTableHead = document.getElementsByClassName(
@@ -11,6 +14,35 @@ function Home() {
     );
 
     const navigate = useNavigate();
+
+    async function checkToken() {
+        await axios
+            .post(
+                "/api/authorization",
+                {
+                    dummy: "dummy",
+                    // post요청시 body가 없으니까 오류가 떴음. 아무 더미 데이터 전송
+                },
+                {
+                    headers: {
+                        Authorization: token,
+                        "Content-Type": "application/json",
+                        // encType: "multipart/form-data", // 파일을 넣을거면 필수
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res);
+                setMemberId(res.data);
+            })
+            .catch((e) => {
+                console.error(e);
+                console.error(e.response.data);
+                if (e.response.data === "토큰이 유효하지 않습니다") {
+                    localStorage.clear();
+                }
+            });
+    }
 
     const getMember = () => {
         axios
@@ -130,11 +162,13 @@ function Home() {
     useEffect(() => {
         getMember();
         getPost();
+        checkToken();
     }, []);
 
     return (
         <div className={style.homeWrapper}>
             <h1>This is Home!!</h1>
+            <h3>현재 로그인 되어있는 유저 : {memberId}</h3>
             <table className={style.memberTable}>
                 <thead className={style.memberTableHead}>
                     <tr className={style.tr}>
