@@ -15,7 +15,8 @@ function Home() {
 
     const navigate = useNavigate();
 
-    async function checkToken() {
+    const checkToken = async () => {
+        let loginMember;
         await axios
             .post(
                 "/api/authorization",
@@ -34,6 +35,7 @@ function Home() {
             .then((res) => {
                 console.log(res);
                 setMemberId(res.data);
+                loginMember = res.data;
             })
             .catch((e) => {
                 console.error(e);
@@ -42,7 +44,8 @@ function Home() {
                     localStorage.clear();
                 }
             });
-    }
+        return loginMember;
+    };
 
     const getMember = () => {
         axios
@@ -58,10 +61,10 @@ function Home() {
                     id.innerText = res.data[i].id;
                     memberTableRow.appendChild(id);
 
-                    const memberId = document.createElement("th");
-                    memberId.setAttribute("class", style.th);
-                    memberId.innerText = res.data[i].memberId;
-                    memberTableRow.appendChild(memberId);
+                    const memberIdTh = document.createElement("th");
+                    memberIdTh.setAttribute("class", style.th);
+                    memberIdTh.innerText = res.data[i].memberId;
+                    memberTableRow.appendChild(memberIdTh);
 
                     const name = document.createElement("th");
                     name.setAttribute("class", style.th);
@@ -95,6 +98,28 @@ function Home() {
                         navigate(`/memberInfo/${res.data[i].id}`);
                     };
                     memberTableRow.appendChild(memberInfoButton);
+
+                    const followButton = document.createElement("button");
+                    followButton.setAttribute("class", style.followButton);
+                    followButton.innerText = "팔로우";
+                    followButton.onclick = () => {
+                        checkToken().then((buttonRes) => {
+                            axios
+                                .get(`/api/memberIds/${buttonRes}`, {
+                                    dummy: "dummy",
+                                })
+                                .then((r) => {
+                                    axios.post(`/api/follow`, {
+                                        followedMemberId: res.data[i].memberId,
+                                        followingMemberId: r.data.memberId,
+                                    });
+                                })
+                                .catch((e) => {
+                                    console.error(e);
+                                });
+                        });
+                    };
+                    memberTableRow.appendChild(followButton);
 
                     memberTableHead[0].appendChild(memberTableRow);
                 }
@@ -180,6 +205,7 @@ function Home() {
                         <th className={style.th}>티어</th>
                         <th className={style.th}>가입일</th>
                         <th className={style.th}>정보 보기</th>
+                        <th className={style.th}>팔로우</th>
                     </tr>
                 </thead>
             </table>
